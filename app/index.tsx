@@ -18,6 +18,8 @@ const COUNTER_COUNT = 5;
 // Adjust this value (in seconds) to 5 * 60 when you want to test a 5 minute alarm window.
 const GLOBAL_ALARM_INTERVAL_SECONDS = 4 * 60 * 60;
 const STORAGE_KEY = "kamreen-state-v1";
+// Affichage de la section debug (visible par défaut en dev)
+const SHOW_DEBUG = false;
 
 type CounterState = {
   id: number;
@@ -645,6 +647,7 @@ export default function HomeScreen() {
         ))}
       </View>
 
+      {SHOW_DEBUG && (
       <View style={styles.debugContainer}>
         <Text style={styles.debugTitle}>Debug filtration</Text>
         <Text style={styles.debugLine}>
@@ -678,6 +681,7 @@ export default function HomeScreen() {
           );
         })}
       </View>
+      )}
     </SafeAreaView>
   );
 }
