@@ -556,6 +556,7 @@ export default function HomeScreen() {
           isEmpty: true,
           startCount: 0,
           lastPauseTimestamp: null,
+          filterClicks: 0,
         };
       })
     );
