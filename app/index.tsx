@@ -492,7 +492,16 @@ export default function HomeScreen() {
       return;
     }
 
-    let shouldIncrementFilter = false;
+    // Déterminer à l'avance si ce clic doit compter
+    const now = Date.now();
+    const target = counters.find((c) => c.id === id);
+    const isStarting = target ? !target.isRunning : true;
+    const allowFilterIncrementPrecomputed =
+      isStarting &&
+      target &&
+      (target.isEmpty ||
+        (target.lastPauseTimestamp !== null &&
+          now - target.lastPauseTimestamp >= 30000));
 
     setCounters((prev) =>
       prev.map((counter) => {
@@ -508,29 +517,20 @@ export default function HomeScreen() {
           };
         }
 
-        const now = Date.now();
-        const allowFilterIncrement =
-          counter.isEmpty ||
-          counter.lastPauseTimestamp === null ||
-          now - counter.lastPauseTimestamp >= 30000;
-        if (allowFilterIncrement) {
-          shouldIncrementFilter = true;
-        }
-
         return {
           ...counter,
           isRunning: true,
           isEmpty: false,
           startCount: 0,
           lastPauseTimestamp: null,
-          filterClicks: allowFilterIncrement
+          filterClicks: allowFilterIncrementPrecomputed
             ? counter.filterClicks + 1
             : counter.filterClicks,
         };
       })
     );
 
-    if (shouldIncrementFilter) {
+    if (allowFilterIncrementPrecomputed) {
       setFilterStartEvents((prev) => {
         const next = prev + 1;
         if (next >= 2) {
